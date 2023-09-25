@@ -1,0 +1,137 @@
+---
+#==============================================================================#
+#          EXTENSÃO UNIVERSITÁRIA EM CIÊNCIAS CLIMÁTICAS E AMBIENTAIS          #
+#          PROJETO "PROCESSAMENTO E ANÁLISE DE DADOS AMBIENTAIS COM R"         #
+#                        Contato: pexcca.lamet@uenf.br                         #
+#                       https://linktr.ee/pexcca.lamet                         #
+#                                                                              #
+#==============================================================================#
+
+#                              MAPA AMAZÔNIA AZUL                              # 
+
+
+
+#Instalando Pacotes Úteis
+
+
+
+install.packages("tidyr")
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("openair")
+install.packages("plotly")
+install.packages("expss")
+install.packages("gganimate")
+install.packages("dplyr")
+install.packages("naniar")
+install.packages("sf")
+install.packages("raster")
+install.packages("dplyr")
+install.packages("spData")
+install.packages("tmap")    
+install.packages("leaflet") 
+install.packages("mapview") 
+install.packages("geobr")
+install.packages("rio")
+install.packages("rgeos")
+install.packages("ggspatial")
+install.packages("plyr")
+install.packages("data.table")
+install.packages("magrittr")
+install.packages("rgdal")
+install.packages("ggrepel")
+install.packages("bindrcpp")
+install.packages("naniar")
+
+#Carregando Pacotes Úteis
+library("tidyr")
+library("tidyverse")
+library("ggplot2")
+library("openair")
+library("plotly")
+library("expss")
+library("gganimate")
+library("dplyr")
+library("naniar")
+library("sf")
+library("raster")
+library("dplyr")
+library("spData")
+library("tmap")    
+library("leaflet") 
+library("mapview") 
+library("geobr")
+library("rio")
+library("rgeos")
+library("ggspatial")
+library("plyr")
+library("data.table")
+library("viridis")
+library("magrittr")
+library("rgdal")
+library("ggrepel")
+library("expss")
+library("bindrcpp")
+library("naniar")
+
+#```{r Gerando e Ajustando as Feições e Bases Espaciais do Litoral Fluminense, message=FALSE, warning=FALSE, include=FALSE}
+library('sf')
+library("ggplot2")
+library("ggspatial")
+library("ggrepel")
+library("rgdal")
+library('geobr')
+library("rnaturalearth")
+library("rnaturalearthdata")
+
+#Criando o mapa com Geobr
+
+library(geobr)                # Carregando o pacote.
+
+View(list_geobr())     # Retorna a base de dados do pacote 'geobr'.
+
+# Podemos usar a função read_country() para baixar os dados das fronteiras do Brasil.
+BR <- geobr::read_country(year = 2020)   # 2020 é o ano do conjunto de dados. 
+plot(BR$geom)
+sf::st_crs(BR)
+
+## Gerando e Ajustando as Feições e Bases Espaciais do Litoral BR
+world <- ne_countries(scale="medium",returnclass = "sf")
+estados_br <- read_state(code_state = "all",year=2019,simplified = TRUE)
+BR <- geobr::read_country(year = 2020)
+municipios_litoral_br <- sf::st_read(dsn = "C:/Users/IMTT/Desktop/PASTA KAREN UENF/dados pnboia/ZCB.shp")
+municipios_litoral_br <- st_as_sf(municipios_litoral_br)
+linha_base <- sf::st_read(dsn = "C:/Users/IMTT/Desktop/PASTA KAREN UENF/dados pnboia/baseline2019.shp")
+linha_base <- st_as_sf(linha_base)
+doze_milhas<- sf::st_read(dsn = "C:/Users/IMTT/Desktop/PASTA KAREN UENF/dados pnboia/12milhas.shp")
+doze_milhas <- st_as_sf(doze_milhas)
+vinteequatro_milhas <- sf::st_read(dsn = "C:/Users/IMTT/Desktop/PASTA KAREN UENF/dados pnboia/24milhas.shp")
+vinteequatro_milhas <- st_as_sf(vinteequatro_milhas)
+duzentas_milhas <- sf::st_read(dsn = "C:/Users/IMTT/Desktop/PASTA KAREN UENF/dados pnboia/linha200.shp")
+duzentas_milhas <- st_as_sf(duzentas_milhas)
+
+# Calculando Linha Base
+st_is_longlat(linha_base)
+st_transform(linha_base,32724)
+
+# MAPAS INICIAIS
+library("ggrepel")
+
+# Limites da Zona Costeira Brasileira
+areadeestudo <- ggplot() + geom_sf(data=world,size=0.001,fill="gray95") + 
+  geom_sf(data=estados_br,size=0.1,fill="gray85")+
+  geom_sf(data= municipios_litoral_br,aes(fill=Litoral),lwd=0,show.legend = "polygon") +
+  labs(title ="Mapa Amazônia Azul", fill="Compartimento Litorâneo")+xlab("Longitude")+ylab("Latitude") + 
+  theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", size = 0.2), panel.background = element_rect(fill = "aliceblue")) + 
+  annotation_scale(location = "br",pad_y=unit(0.7,"cm"), width_hint = 0.5,bar_cols=c("grey","white"),line_width = 0.5,text_pad = unit(0.05, "cm")) + 
+  annotation_north_arrow(location = "br", which_north = "true", pad_x = unit(0.1, "in"), pad_y = unit(0.4, "in"), style = north_arrow_fancy_orienteering) + 
+  geom_sf(data=linha_base,aes(color='A'),size=0.2,show.legend = "line") + geom_sf(data=doze_milhas,aes(color='B'),size=0.2,show.legend = "line") + 
+  geom_sf(data=vinteequatro_milhas,aes(color='C'),size=0.2,show.legend = "line")+ 
+  geom_sf(data=duzentas_milhas,aes(color='D'),size=0.2,show.legend = "line") + 
+  scale_color_manual(values=c("A" = "red", "B" = "blue", "C"="black", "D"="darkblue"),labels=c("Linha de Base","Mar Territorial (12 mn)","Zona Contígua (24 mn)","Zona Econômica Exclusiva (200 mn)"),name="Limites Marinhos") + 
+  coord_sf(xlim = c(-55, -25), ylim = c(-35, 5), expand = FALSE)
+
+areadeestudo #Para a visualização do mapa no plots
+
+
+#------------------------https://linktr.ee/pexcca.lamet------------------------#
