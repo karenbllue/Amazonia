@@ -1,0 +1,436 @@
+---
+title: "PROJETO ONDAS BR"
+author: "Eduardo Bulhoes e Karen Oliveira"
+date: "6/17/2020"
+objetivos: trabalhar com dados de ondas seja do PNBOIA
+---
+
+#Instalando Pacotes Úteis
+install.packages("tidyr")
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("openair")
+install.packages("plotly")
+install.packages("expss")0
+install.packages("gganimate")
+install.packages("dplyr")
+install.packages("naniar")
+install.packages("sf")
+install.packages("raster")
+install.packages("dplyr")
+install.packages("spData")
+install.packages("tmap")    
+install.packages("leaflet") 
+install.packages("mapview") 
+install.packages("geobr")
+install.packages("rio")
+install.packages("rgeos")
+install.packages("ggspatial")
+install.packages("plyr")
+install.packages("data.table")
+install.packages("magrittr")
+install.packages("rgdal")
+install.packages("ggrepel")
+install.packages("bindrcpp")
+install.packages("naniar")
+
+#Carregando Pacotes Úteis
+library("tidyr")
+library("tidyverse")
+library("ggplot2")
+library("openair")
+library("plotly")
+library("expss")
+library("gganimate")
+library("dplyr")
+library("naniar")
+library("sf")
+library("raster")
+library("dplyr")
+library("spData")
+library("tmap")    
+library("leaflet") 
+library("mapview") 
+library("geobr")
+library("rio")
+library("rgeos")
+library("ggspatial")
+library("plyr")
+library("data.table")
+library("viridis")
+library("magrittr")
+library("rgdal")
+library("ggrepel")
+library("expss")
+library("bindrcpp")
+library("naniar")
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+my_path <- getwd()
+```
+
+```{r Gerando e Ajustando as Feições e Bases Espaciais do Litoral Fluminense, message=FALSE, warning=FALSE, include=FALSE}
+library('sf')
+library("ggplot2")
+library("ggspatial")
+library("ggrepel")
+library("rgdal")
+library('geobr')
+library("rnaturalearth")
+library("rnaturalearthdata")
+
+## Gerando e Ajustando as Feições e Bases Espaciais do Litoral BR
+world <- ne_countries(scale="medium",returnclass = "sf")
+estados_br <- read_state(code_state = "all",year=2019,simplified = TRUE)
+municipios_litoral_br <- readOGR("/Users/User/Desktop/dados pnboia/ZCB.shp", verbose=FALSE)
+municipios_litoral_br <- st_as_sf(municipios_litoral_br)
+posicao_boias <- read.csv("/Users/User/Desktop/dados pnboia/posicao boias.csv")
+linha_base <- readOGR("/Users/User/Desktop/dados pnboia/baseline2019.shp", verbose=FALSE)
+linha_base <- st_as_sf(linha_base)
+doze_milhas<- readOGR("/Users/User/Desktop/dados pnboia/12milhas.shp", verbose=FALSE)
+doze_milhas <- st_as_sf(doze_milhas)
+vinteequatro_milhas <- readOGR("/Users/User/Desktop/dados pnboia/24milhas.shp", verbose=FALSE)
+vinteequatro_milhas <- st_as_sf(vinteequatro_milhas)
+duzentas_milhas <- readOGR("/Users/User/Desktop/dados pnboia/linha200.shp", verbose=FALSE)
+duzentas_milhas <- st_as_sf(duzentas_milhas)
+
+# Calculando Linha Base
+st_is_longlat(linha_base)
+st_transform(linha_base,32724)
+
+# MAPAS INICIAIS
+library("ggrepel")
+
+# Limites da Zona Costeira Brasileira
+areadeestudo <- ggplot() + geom_sf(data=world,size=0.001,fill="gray95") + geom_sf(data=estados_br,size=0.1,fill="gray85")+ geom_sf(data= municipios_litoral_br,aes(fill=Litoral),lwd=0,show.legend = "polygon")+labs(fill="Municípios por Compartimento Litoraneo")+xlab("Longitude")+ylab("Latitude") + theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", size = 0.2), panel.background = element_rect(fill = "aliceblue")) + annotation_scale(location = "br",pad_y=unit(0.7,"cm"), width_hint = 0.5,bar_cols=c("grey","white"),line_width = 0.5,text_pad = unit(0.05, "cm")) + annotation_north_arrow(location = "br", which_north = "true", pad_x = unit(0.1, "in"), pad_y = unit(0.4, "in"), style = north_arrow_fancy_orienteering) + geom_sf(data=linha_base,aes(color='A'),size=0.2,show.legend = "line") + geom_sf(data=doze_milhas,aes(color='B'),size=0.2,show.legend = "line") + geom_sf(data=vinteequatro_milhas,aes(color='C'),size=0.2,show.legend = "line")+ geom_sf(data=duzentas_milhas,aes(color='D'),size=0.2,show.legend = "line") + scale_color_manual(values=c("A" = "red", "B" = "blue", "C"="black", "D"="darkblue"),labels=c("Linha de Base","Mar Territorial (12 mn)","Zona Contígua (24 mn)","Zona Econômica Exclusiva (200 mn)"),name="Limites Marinhos") + coord_sf(xlim = c(-55, -25), ylim = c(-35, 5), expand = FALSE)
+areadeestudo
+
+# Compartimentação conforme MACRO
+compartimentos_litoral_br <- readOGR("/Users/User/Desktop/dados pnboia/Litoral Brasileiro.kml", verbose=FALSE)
+compartimentos_litoral_br <- st_as_sf(compartimentos_litoral_br)
+compartimentos_litoral_br <- as.data.frame(compartimentos_litoral_br %>% mutate(Longitude=unlist(map(compartimentos_litoral_br$geometry,1)),Latitude=unlist(map(compartimentos_litoral_br$geometry,2))))
+
+# Posição das Bóias
+mapa_boias_brasil <-ggplot() + geom_sf(data=world,size=0.001,fill="gray95") + geom_sf(data=estados_br,size=0.1,fill="gray85")+ geom_sf(data= municipios_litoral_br,aes(fill=Litoral),lwd=0,show.legend = "polygon")+labs(fill="Compartimento Litorâneo")+xlab("Longitude")+ylab("Latitude") + theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", size = 0.2), panel.background = element_rect(fill = "aliceblue")) + annotation_scale(location = "br",pad_y=unit(0.7,"cm"), width_hint = 0.5,bar_cols=c("grey","white"),line_width = 0.5,text_pad = unit(0.05, "cm")) + annotation_north_arrow(location = "br", which_north = "true", pad_x = unit(0.1, "in"), pad_y = unit(0.4, "in"), style = north_arrow_fancy_orienteering)+ coord_sf(xlim = c(-55, -25), ylim = c(-35, 5), expand = FALSE) + geom_point(data = posicao_boias, aes(x = LON, y = LAT),size=1.0,na.rm=TRUE) + geom_label_repel(data=posicao_boias,aes(x=LON,y=LAT,label=NOME),box.padding=0.15, label.padding = 0.15,point.padding = 0.15,size=4,max.overlaps=getOption("ggrepel.max.overlaps", default=120),segment.color = 'grey60',segment.size=0.1)
+
+mapa_boias_brasil
+
+```
+
+```{r Importando os Dados para Data Frame e Fazendo Ajustes Iniciais, echo=FALSE, message=FALSE, warning=FALSE}
+library("tidyr")
+library("naniar")
+library('data.table')
+
+## Importação dos Dados
+dados_abrolhos <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia abrolhos.csv")
+dados_alcatrazes <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia alcatrazes.csv")
+dados_baciadecampos <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia bacia de campos.csv")
+dados_baciadesantos <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia bacia de santos.csv")
+dados_cabofrio2 <- read.csv2("/Users/User/Desktop/dados pnboia/dados pnboia cabofrio 2.csv")
+dados_cabofrio <- read.csv2("/Users/User/Desktop/dados pnboia/dados pnboia cabofrio.csv")
+dados_fortaleza <- read.csv2("/Users/User/Desktop/dados pnboia/dados pnboia fortaleza.csv")
+dados_imbituba <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia imbituba.csv")
+dados_itaguai <- read.csv2("/Users/User/Desktop/dados pnboia/dados pnboia itaguai.csv")
+dados_itajai <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia itajai.csv")
+dados_itaoca <- read.csv2("/Users/User/Desktop/dados pnboia/dados pnboia itaoca.csv")
+dados_minuano <- read.csv2("/Users/User/Desktop/dados pnboia/dados pnboia minuano.csv")
+dados_niteroi2 <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia niteroi 2.csv")
+dados_niteroi <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia niteroi.csv")
+dados_noronha <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia noronha.csv")
+dados_portoseguro <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia porto seguro.csv")
+dados_recife <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia recife.csv")
+dados_riogrande <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia rio grande.csv")
+dados_santos <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia santos.csv")
+dados_vitoriatrindade <- read.csv2("/Users/User/Desktop/dados pnboia/dados pnboia vitoria-trindade.csv")
+dados_vitoria <- read.csv("/Users/User/Desktop/dados pnboia/dados pnboia vitoria.csv")
+
+## AJUSTE DAS COLUNAS
+
+dados_abrolhos <- dados_abrolhos[,c(1,5,6,6,7,8,8,8,14,10)]
+dados_abrolhos$NOME = "Bóia Abrolhos"
+dados_abrolhos$LITORAL = "Litoral Oriental"
+colnames(dados_abrolhos) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+dados_abrolhos$RV = NA
+dados_abrolhos$AO.MAX = NA
+dados_abrolhos$PRESS = NA
+
+dados_alcatrazes <- dados_alcatrazes[,c(1,5,6,6,7,8,8,8,14,10)]
+dados_alcatrazes$NOME = "Bóia alcatrazes"
+dados_alcatrazes$LITORAL = "Litoral Oriental"
+colnames(dados_alcatrazes) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+dados_alcatrazes$RV = NA
+dados_alcatrazes$AO.MAX = NA
+dados_alcatrazes$PRESS = NA
+
+dados_baciadecampos <- dados_baciadecampos[,c(1,7,9,8,10,13,22,24,23,25)]
+dados_baciadecampos$NOME = "Bóia Bacia de campos"
+dados_baciadecampos$LITORAL = "Litoral Sudeste"
+colnames(dados_baciadecampos) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_baciadesantos <- dados_baciadesantos[,c(1,7,9,8,10,13,22,24,23,25)]
+dados_baciadesantos$NOME = "Bóia Bacia de Santos"
+dados_baciadesantos$LITORAL = "Litoral Sudeste"
+colnames(dados_baciadesantos) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_cabofrio <- dados_cabofrio[,c(1,6:10,20:23)]
+dados_cabofrio$NOME = "Bóia Cabo Frio"
+dados_cabofrio$LITORAL = "Litoral Sudeste"
+colnames(dados_cabofrio) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_cabofrio2 <- dados_cabofrio2[,c(1,6:10,20:23)]
+dados_cabofrio2$NOME = "Bóia Cabo Frio 2"
+dados_cabofrio2$LITORAL = "Litoral Sudeste"
+colnames(dados_cabofrio2) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_fortaleza <- dados_fortaleza[,c(1,6:10,20:23)]
+dados_fortaleza$NOME = "Bóia Fortaleza"
+dados_fortaleza$LITORAL = "Litoral Nordeste"
+colnames(dados_fortaleza) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_imbituba <- dados_imbituba[,c(1,5,6,6,7,8,8,8,14,10)]
+dados_imbituba$NOME = "Bóia imbituba"
+dados_imbituba$LITORAL = "Litoral Oriental"
+colnames(dados_imbituba) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+dados_imbituba$RV = NA
+dados_imbituba$AO.MAX = NA
+dados_imbituba$PRESS = NA
+
+dados_itaguai <- dados_itaguai[,c(1,6:10,20:23)]
+dados_itaguai$NOME = "Bóia Itaguai"
+dados_itaguai$LITORAL = "Litoral Sudeste"
+colnames(dados_itaguai) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_itajai <- dados_itajai[,c(1,7:11,21:24)]
+dados_itajai$NOME = "Bóia Itajai"
+dados_itajai$LITORAL = "Litoral Sudeste"
+colnames(dados_itajai) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_itaoca <- dados_itaoca[,c(1,6:10,20:23)]
+dados_itaoca$NOME = "Bóia Itaoca"
+dados_itaoca$LITORAL = "Litoral Oriental"
+colnames(dados_itaoca) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_minuano <- dados_minuano[,c(1,6:10,20:23)]
+dados_minuano$NOME = "Bóia Minuano"
+dados_minuano$LITORAL = "Litoral Sul"
+colnames(dados_minuano) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_niteroi <- dados_niteroi[,c(1,7:11,21:24)]
+dados_niteroi$NOME = "Bóia Niteroi"
+dados_niteroi$LITORAL = "Litoral Sudeste"
+colnames(dados_niteroi) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_niteroi2 <- dados_niteroi2[,c(1,7:11,21:24)]
+dados_niteroi2$NOME = "Bóia Niteroi 2"
+dados_niteroi2$LITORAL = "Litoral Sudeste"
+colnames(dados_niteroi2) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_noronha <- dados_noronha[,c(1,5,6,6,7,8,8,8,14,10)]
+dados_noronha$NOME = "Bóia noronha"
+dados_noronha$LITORAL = "Litoral Oriental"
+colnames(dados_noronha) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+dados_noronha$RV = NA
+dados_noronha$AO.MAX = NA
+dados_noronha$PRESS = NA
+
+dados_portoseguro <- dados_portoseguro[,c(1,7:11,21:24)]
+dados_portoseguro$NOME = "Bóia Porto Seguro"
+dados_portoseguro$LITORAL = "Litoral Oriental"
+colnames(dados_portoseguro) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_recife <- dados_recife[,c(1,7:11,21:24)]
+dados_recife$NOME = "Bóia Recife"
+dados_recife$LITORAL = "Litoral Nordeste"
+colnames(dados_recife) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_riogrande <- dados_riogrande[,c(1,7:11,21:24)]
+dados_riogrande$NOME = "Bóia Rio Grande"
+dados_riogrande$LITORAL = "Litoral Sul"
+colnames(dados_riogrande) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_santos <- dados_santos[,c(1,7:11,21:24)]
+dados_santos$NOME = "Bóia Santos"
+dados_santos$LITORAL = "Litoral Sudeste"
+colnames(dados_santos) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_vitoria <- dados_vitoria[,c(1,7:11,21:24)]
+dados_vitoria$NOME = "Bóia Vitória"
+dados_vitoria$LITORAL = "Litoral Oriental"
+colnames(dados_vitoria) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+
+dados_vitoriatrindade <- dados_vitoriatrindade[,c(1,4,5,5,6,7,7,7,13,9)]
+dados_vitoriatrindade$NOME = "Bóia Vitória-Trindade"
+dados_vitoriatrindade$LITORAL = "Litoral Oriental"
+colnames(dados_vitoriatrindade) <- c("Data.Hora","VV","DV","RV","TEMP","PRESS","AO","AO.MAX","PO","DO","NOME","LITORAL")
+dados_vitoriatrindade$RV = NA
+dados_vitoriatrindade$AO.MAX = NA
+dados_vitoriatrindade$PRESS = NA
+
+# REUNINDO OS DADOS EM UM DF GLOBAL
+dados_boias_br <- rbind(dados_abrolhos,dados_alcatrazes,dados_baciadecampos,dados_baciadesantos,dados_cabofrio,dados_cabofrio2,dados_fortaleza,dados_imbituba,dados_itaguai,dados_itajai,dados_itaoca,dados_minuano,dados_niteroi,dados_niteroi2,dados_noronha,dados_portoseguro,dados_recife,dados_riogrande,dados_santos,dados_vitoria,dados_vitoriatrindade)
+
+# TRANSFORMANDO AS COLUNAS 2 A 10 EM NUMERICAS
+dados_boias_br[,c(2:10)] <- sapply(dados_boias_br[,c(2:10)], as.numeric)
+
+# TRANSFORMANDO DADOS -9999 EM NA
+dados_boias_br <- dados_boias_br %>% mutate_all(na_if,"-9999")
+dados_boias_br <- dados_boias_br %>% mutate_all(na_if,"28486")
+
+```
+
+```{r Estatística Básica PNBOIA BR Global}
+library("expss")
+library("openair")
+
+# TABELA GLOBAL
+# aplicando legendas nas colunas
+dados_boias_br = apply_labels(dados_boias_br,
+                                         VV = "Velocidade do Vento (m/s)",
+                                         DV = "Direção dos Ventos (ºN)",
+                                         RV = "Rajada dos Ventos (m/s)",
+                                         TEMP = "Temperatura Atmosférica (ºC)",
+                                         PRESS = "Pressão Atmosférica (mb)",
+                                         AO = "Altura Signif.Ondas (m)",
+                                         AO.MAX ="Altura Máx.Ondas (m)",
+                                         DO = "Direção Média das Ondas (ºN)",
+                                         PO = "Período de Ondas (s)",
+                                         NOME = "Nome da Bóia",
+                                         LITORAL = "Classificação do Litoral Brasileiro")
+
+#ESTATISTICA BASICA USANDO O SPSS
+tabela_dados_boias_br <- dados_boias_br %>%
+    tab_cells(VV,DV,RV,TEMP,PRESS,AO,AO.MAX,DO,PO) %>%
+    tab_cols(Total="Condições Gerais","Durante Tempestades"=AO>=3,NOME) %>% 
+    tab_stat_fun("Média"=w_mean,"Mínima"= w_min,"Máxima"= w_max,"Desvio Padrão"=w_sd,"N"=w_n) %>%
+    tab_pivot(stat_position = "inside_columns") %>% 
+    tab_caption("Bóias Todas")
+
+tabela_dados_boias_br=tabela_dados_boias_br[,-c(3)]
+tabela_dados_boias_br
+
+#EXPORTANDO PARA EXCEL
+library(writexl)
+write_xlsx(tabela_dados_boias_br,"/Users/User/Desktop/dados pnboia/tabela_dados_boias_br.xlsx")
+
+
+# GRAFICO ROSA DOS VENTOS GLOBAL
+dados_boias_br$ws <- dados_boias_br$VV
+dados_boias_br$wd <- dados_boias_br$DV
+windRose(dados_boias_br,ws.int=2, breaks=c(0,4,8,12,16),paddle=FALSE,cols="increment",key.position = "right",key.header = "Velocidade e Direção do Vento 
+         - Dados PNBOIA")
+
+# GRAFICO ROSA DAS ONDAS GLOBAL
+dados_boias_br$ws <- dados_boias_br$AO
+dados_boias_br$wd <- dados_boias_br$DO
+windRose(dados_boias_br,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Significativa e Direção de Ondas 
+         - Dados PNBOIA")
+
+# GRAFICO ROSA DAS ONDAS MAXIMAS GLOBAL
+dados_boias_br$ws <- dados_boias_br$AO.MAX
+dados_boias_br$wd <- dados_boias_br$DO
+windRose(dados_boias_br,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Máxima e Direção de Ondas 
+          - Dados PNBOIA")
+
+#ALGUMAS CORRELACOES ENTRE OS DADOS GLOBAIS
+
+#ALTURA DE ONDA vs VELOCIDADE DO VENTO
+ggplot(dados_boias_br)+geom_point(aes(x=AO,y=VV,color=LITORAL),size=0.01)+stat_smooth(method='gam',size=0.5,color="gray50",aes(x=AO,y=VV))
+
+#ALTURA DE ONDAS VS PERIODO DE ONDAS
+ggplot(dados_boias_br)+geom_point(aes(x=AO,y=PO,color=LITORAL),size=0.01)+geom_smooth(aes(x=AO,y=PO,color=LITORAL))
+
+#ALTURA DE ONDAS VS ALTURA MAXIMA DE ONDAS
+ggplot(dados_boias_br)+geom_point(aes(x=AO,y=AO.MAX,color=LITORAL),size=0.01)+geom_smooth(method='lm',col='black',size=0.1,aes(x=AO,y=AO.MAX))
+
+#ALTURA DE ONDAS VS PRESSAO ATMOSFERICA
+ggplot(dados_boias_br)+geom_point(aes(x=AO,y=PRESS,color=LITORAL),size=0.01)+geom_smooth(aes(x=AO,y=PRESS))
+
+#ALTURA DE ONDAS VS TEMPERATURA
+ggplot(dados_boias_br)+geom_point(aes(x=AO,y=PRESS,color=LITORAL),size=0.01)+geom_smooth(aes(x=AO,y=PRESS))
+
+#ALTURA DE ONDAS POR LITORAL
+ggplot(dados_boias_br)+geom_point(aes(x=AO,y=LITORAL,color=LITORAL),size=1)
+
+
+```
+
+```{r ANALISE POR LITORAL}
+## DADOS MEDIOS POR LITORAL
+med <- aggregate(cbind(VV,DV,RV,AO,DO,AO.MAX,PO) ~ LITORAL, data = dados_boias_br, FUN = mean, na.rm = TRUE)
+## DADOS MAXIMOS POR LITORAL
+max <- aggregate(cbind(VV,RV,AO,AO.MAX,PO) ~ LITORAL, data = dados_boias_br, FUN = max, na.rm = TRUE)
+
+## INFORMACAO SOBRE A MEDIA DAS ONDAS
+print(paste("Observando os dados medidos pelas bóias oceânicas do Programa PNBOIA por macrocompartimento do litoral brasileiro, os valores médios de altura signficativa de ondas (Hs) no",med[1,1],"foram de",round(med[1,5],1),"metros, no",med[2,1],"de",round(med[2,5],1),"metros, no",med[3,1],"de",round(med[3,5],1),"metros e no",med[4,1],"esse valor foi de",round(med[4,5],1),"metros. Se forem consideradas as médias das alturas máximas (Hmax) tais valores no",med[1,1],"foram",round(med[1,7],1),"metros, no",med[2,1],"de",round(med[2,7],1),"metros, no",med[3,1],"de",round(med[3,7],1),"metros e no",med[4,1],"esse valor foi de",round(med[4,7],1),"metros."))
+
+## INFORMACAO SOBRE A MAXIMA DAS ONDAS
+print(paste("Observando os dados medidos pelas bóias oceânicas do Programa PNBOIA por macrocompartimento do litoral brasileiro, o valor máximo de altura signficativa de ondas (Hs) no",max[1,1],"foi de",round(max[1,4],1),"metros, no",max[2,1],"de",round(max[2,4],1),"metros, no",max[3,1],"de",round(max[3,4],1),"metros e no",max[4,1],"esse valor detectado foi de",round(max[4,4],1),"metros. Se forem consideradas a máxima das alturas máximas (Hmax) tal valor no",max[1,1],"foi de",round(max[1,5],1),"metros, no",max[2,1],"de",round(max[2,5],1),"metros, no",max[3,1],"de",round(max[3,5],1),"metros e no",max[4,1],"esse valor foi de",round(max[4,5],1),"metros."))
+
+## INFORMACAO SOBRE A RAZAO ENTRE HMAX (AO.MAX) E HS
+print(paste("Observando os dados medidos pelas bóias oceânicas do Programa PNBOIA por macrocompartimento do litoral brasileiro, a razão entre altura máxima de ondas (Hmax) e a altura significativa de ondas (Hs) no",max[1,1],"mostra que em média Hmax é",round(med[1,5]/med[1,7]*100,1),"% superior a Hs, no",max[2,1],"esse percentual é de",round(med[2,5]/med[2,7]*100,1),"%, no",max[3,1],"esse valor é de",round(med[3,5]/med[3,7]*100,1),"% e no",max[4,1],"essa razão entre Hmax e Hs detectada foi de",round(med[4,5]/med[4,7]*100,1),"%."))
+
+### GRAFICOS
+## LITORAL NORDESTE
+# GRAFICO ROSA DAS ONDAS LITORAL NORDESTE
+lne <- subset(dados_boias_br,LITORAL=="Litoral Nordeste")
+lne$ws <- lne$AO
+lne$wd <- lne$DO
+windRose(lne,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Sifnificativa e 
+         Direção de Ondas no Litoral Nordeste")
+# GRAFICO ROSA DAS ONDAS MAXIMAS LITORAL NORDESTE
+lne$ws <- lne$AO.MAX
+lne$wd <- lne$DO
+windRose(lne,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Sifnificativa e 
+         Direção de Ondas no Litoral Nordeste")
+
+## LITORAL ORIENTAL
+# GRAFICO ROSA DAS ONDAS LITORAL ORIENTAL
+lo <- subset(dados_boias_br,LITORAL=="Litoral Oriental")
+lo$ws <- lo$AO
+lo$wd <- lo$DO
+windRose(lo,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Sifnificativa e 
+         Direção de Ondas no Litoral Oriental")
+# GRAFICO ROSA DAS ONDAS MAXIMAS LITORAL ORIENTAL
+lo$ws <- lo$AO.MAX
+lo$wd <- lo$DO
+windRose(lo,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Sifnificativa e 
+         Direção de Ondas no Litoral Oriental")
+
+## LITORAL SUDESTE
+# GRAFICO ROSA DAS ONDAS LITORAL SUDESTE
+lse <- subset(dados_boias_br,LITORAL=="Litoral Sudeste")
+lse$ws <- lse$AO
+lse$wd <- lse$DO
+windRose(lse,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Sifnificativa e 
+         Direção de Ondas no Litoral Sudeste")
+# GRAFICO ROSA DAS ONDAS MAXIMAS LITORAL SUDESTE
+lse$ws <- lse$AO.MAX
+lse$wd <- lse$DO
+windRose(lse,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Sifnificativa e 
+         Direção de Ondas no Litoral Sudeste")
+
+## LITORAL SUL
+# GRAFICO ROSA DAS ONDAS LITORAL SUL
+ls <- subset(dados_boias_br,LITORAL=="Litoral Sul")
+ls$ws <- ls$AO
+ls$wd <- ls$DO
+windRose(ls,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Sifnificativa e 
+         Direção de Ondas no Litoral Sul")
+# GRAFICO ROSA DAS ONDAS MAXIMAS LITORAL SUL
+ls$ws <- ls$AO.MAX
+ls$wd <- ls$DO
+windRose(ls,ws.int=2, breaks=c(0,1,2,3,4),paddle=FALSE,cols="hue",key.position = "right",key.header = "Altura Sifnificativa e 
+         Direção de Ondas no Litoral Sul")
+
+
+
+```
+
+
+```
+
+

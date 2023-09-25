@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Litoral Brasileiro</name>
+	<description>Limites do Litoral Brasileiro conforme Muehe 1998 e MACRO</description>
+	<gx:CascadingStyle kml:id="__managed_style_2A664902021CD170A6CC">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_1CE23483D31CD170A6CC">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_04392DB3421CD170A6CC">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_1CE23483D31CD170A6CC</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_2A664902021CD170A6CC</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark id="03E5B19E001CD170A6C9">
+		<name>Cabo Orange</name>
+		<LookAt>
+			<longitude>-51.5154642182336</longitude>
+			<latitude>4.394399650736382</latitude>
+			<altitude>-5.771020779796831</altitude>
+			<heading>-2.101349047175266</heading>
+			<tilt>18.55449202996916</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>44899.38737399876</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-51.54076465434494,4.448595892903924,-9.473308077012488</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="02BBD5A4481CD1724E83">
+		<name>Cabo Norte</name>
+		<LookAt>
+			<longitude>-49.89827065941314</longitude>
+			<latitude>1.652556272286979</latitude>
+			<altitude>5.228763369745333</altitude>
+			<heading>0.7594372501382818</heading>
+			<tilt>29.66396532909445</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>34796.25030426309</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-49.91494105255092,1.668499578978209,11.09997298033134</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="026580EBA41CD172EAF6">
+		<name>Ponta Taipu</name>
+		<LookAt>
+			<longitude>-48.0621072428941</longitude>
+			<latitude>-0.6428453505220197</latitude>
+			<altitude>13.03185379233929</altitude>
+			<heading>-1.425186745544717</heading>
+			<tilt>2.317654337200603</tilt>
+			<gx:fovy>34.99999801397792</gx:fovy>
+			<range>108378.2944027148</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-48.0434625416402,-0.6621752500236864,15.2934222625102</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="09A78C88F91CD173E6AF">
+		<name>Mangues Secos</name>
+		<LookAt>
+			<longitude>-43.76743367993078</longitude>
+			<latitude>-2.377120552705039</latitude>
+			<altitude>-42.39144227104655</altitude>
+			<heading>-0.2448193438469557</heading>
+			<tilt>0.5336175930833589</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>196466.3679969684</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-43.48160593880262,-2.375311202830031,34.64106719979927</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="02A00AC2111CD1760A02">
+		<name>Ponta de Itapagé</name>
+		<LookAt>
+			<longitude>-40.02247189469635</longitude>
+			<latitude>-2.842794773878443</latitude>
+			<altitude>6.913582613702946</altitude>
+			<heading>5.368510523733668e-09</heading>
+			<tilt>20.51000990187324</tilt>
+			<gx:fovy>34.99999730849942</gx:fovy>
+			<range>13670.82155071898</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-40.02437421276102,-2.840089323382517,1.290739145385381</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0932FC73E91CD176977B">
+		<name>Cabo Calcanhar</name>
+		<LookAt>
+			<longitude>-35.49911817056596</longitude>
+			<latitude>-5.159991591272493</latitude>
+			<altitude>-0.8551013522825224</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>34.99999986815961</gx:fovy>
+			<range>11059.49747882551</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-35.48914696054317,-5.157642725817173,-0.2849691494709262</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0CF5530D041CD1792FEB">
+		<name>Porto de Pedras</name>
+		<LookAt>
+			<longitude>-35.30361623599092</longitude>
+			<latitude>-9.157023954051402</latitude>
+			<altitude>33.51422785637498</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>34.99999974340128</gx:fovy>
+			<range>12871.04826122057</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-35.29777644230769,-9.161759660861188,19.18910489863768</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="09071F2E001CD17A2C5F">
+		<name>Rio São Francisco</name>
+		<LookAt>
+			<longitude>-36.40274341549954</longitude>
+			<latitude>-10.45915301635417</latitude>
+			<altitude>5.671998012543349</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>34.99999969404989</gx:fovy>
+			<range>33192.75203728583</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-36.39557320924197,-10.50330865296498,5.797915299189341</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0299AD09691CD17AD3F0">
+		<name>Salvador</name>
+		<LookAt>
+			<longitude>-38.5021034765108</longitude>
+			<latitude>-12.87483300383992</latitude>
+			<altitude>-8.06044639197402</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>34.99999998166512</gx:fovy>
+			<range>81050.65131297335</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-38.47078895623742,-13.01710976493733,-7.910688161943878</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0666BD00931CD17C3C25">
+		<name>Ilhéus</name>
+		<LookAt>
+			<longitude>-39.04145797068243</longitude>
+			<latitude>-14.7359886765909</latitude>
+			<altitude>15.26604207836143</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>34.99999951544545</gx:fovy>
+			<range>155130.4419599287</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-39.03468406593408,-14.79816640100684,20.39525572569572</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="00FBDF98001CD17CBB1C">
+		<name>Rio Doce</name>
+		<LookAt>
+			<longitude>-39.91832450885752</longitude>
+			<latitude>-19.51016663125955</latitude>
+			<altitude>40.77009776669642</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>34.99999996445134</gx:fovy>
+			<range>714659.6621272714</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-39.79112128551971,-19.59267756610639,8.110052336858066</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0DEA7D91B21CD17E102A">
+		<name>Itabapoana</name>
+		<LookAt>
+			<longitude>-40.95227908397871</longitude>
+			<latitude>-21.32039694411122</latitude>
+			<altitude>5.662182287897299</altitude>
+			<heading>359.9999991502617</heading>
+			<tilt>0</tilt>
+			<gx:fovy>34.99999997169314</gx:fovy>
+			<range>23730.38918375736</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-40.95825842402846,-21.31058213422824,5.917317023371887</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="029717C8121CD17E7070">
+		<name>Cabo Frio</name>
+		<LookAt>
+			<longitude>-41.96564294072627</longitude>
+			<latitude>-22.87196440421297</latitude>
+			<altitude>18.13296847875224</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>34.99999997169314</gx:fovy>
+			<range>143477.6379883848</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-41.99061959397593,-23.00295546379524,19.87859888447303</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="09968BF3C61CD17FB3D9">
+		<name>Ilha da Marambaia</name>
+		<LookAt>
+			<longitude>-43.80747535492756</longitude>
+			<latitude>-23.10202807320678</latitude>
+			<altitude>103.9328137709991</altitude>
+			<heading>-3.469783472570303e-07</heading>
+			<tilt>10.46005020459712</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>246231.0071576759</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-43.98020779894949,-23.09156530378949,71.37116601348517</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="04856C81221CD181B254">
+		<name>São Vicente</name>
+		<LookAt>
+			<longitude>-46.35011669372378</longitude>
+			<latitude>-23.96439311252867</latitude>
+			<altitude>19.2750066840903</altitude>
+			<heading>1.959389977973095e-07</heading>
+			<tilt>9.471002888939086</tilt>
+			<gx:fovy>34.99999997740209</gx:fovy>
+			<range>63407.41470367648</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-46.3985795674902,-24.03224128450922,-2.337156417938434</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="049851D4441CD1825E67">
+		<name>Ponta do Vigia</name>
+		<LookAt>
+			<longitude>-48.58963669864468</longitude>
+			<latitude>-26.78010063847921</latitude>
+			<altitude>-1.047515134027179</altitude>
+			<heading>-1.63467481210239e-07</heading>
+			<tilt>1.753387793582565</tilt>
+			<gx:fovy>34.99999996458309</gx:fovy>
+			<range>16236.3481696439</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-48.58538103639084,-26.78475609751871,35.56537007824068</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0121DA71DA1CD184AF28">
+		<name>Ilha de Santa Catarina</name>
+		<LookAt>
+			<longitude>-48.48648277429724</longitude>
+			<latitude>-27.47876268788606</latitude>
+			<altitude>-30.02200128986727</altitude>
+			<heading>-5.59902823451873e-06</heading>
+			<tilt>0.2420706975439789</tilt>
+			<gx:fovy>34.99999750267057</gx:fovy>
+			<range>205494.5628675074</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-48.55925436171989,-27.83745527944295,17.61026809092688</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0D7A34D9421CD185F2B8">
+		<name>Cabo de Santa Marta</name>
+		<LookAt>
+			<longitude>-48.8113013720231</longitude>
+			<latitude>-28.61676059180716</latitude>
+			<altitude>-2.962443791987409</altitude>
+			<heading>-2.762670451022603e-06</heading>
+			<tilt>0.1112194620660774</tilt>
+			<gx:fovy>34.99999874409429</gx:fovy>
+			<range>12695.00827519689</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-48.81339890558176,-28.60566477979645,22.25686970369672</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0E80E98E541CD18738D5">
+		<name>Torres</name>
+		<LookAt>
+			<longitude>-49.72461780379567</longitude>
+			<latitude>-29.34815259678414</latitude>
+			<altitude>-2.876407609496002</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>34.99999994079532</gx:fovy>
+			<range>29217.81377253123</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-49.73223501813749,-29.3571858038005,5.678613740770388</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="09BC58EA041CD187DA7B">
+		<name>Barra do Chuí</name>
+		<LookAt>
+			<longitude>-53.35104224973431</longitude>
+			<latitude>-33.73361500997632</latitude>
+			<altitude>-2.880385349692278</altitude>
+			<heading>10.47751109185694</heading>
+			<tilt>18.94616591779169</tilt>
+			<gx:fovy>34.99999681177133</gx:fovy>
+			<range>16397.19551741844</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_04392DB3421CD170A6CC</styleUrl>
+		<Point>
+			<coordinates>-53.36918047867239,-33.74440468494027,-2.891901015665038</coordinates>
+		</Point>
+	</Placemark>
+</Document>
+</kml>
